@@ -23,30 +23,25 @@ export default function OrdersScreen() {
 
           const isUserAdmin = user.role === 'admin';
           setIsAdmin(isUserAdmin);
-          
           const endpoint = isUserAdmin ? 'get_all_bookings.php' : 'get_my_bookings.php';
-          const url = `${API_BASE}/${endpoint}`;
 
-          console.log("Fetching URL:", url);
-
-          const res = await fetch(url, {
+          // HAPUS log URL dan Text Response
+          const res = await fetch(`${API_BASE}/${endpoint}`, {
              headers: { 'Authorization': `Bearer ${token}` }
           });
 
-          const textResult = await res.text(); 
-          console.log("Response Server:", textResult); // <-- LIHAT INI DI TERMINAL
-
-          const json = JSON.parse(textResult);
+          const json = await res.json();
           
           if (isActive) {
              if(json.success && Array.isArray(json.data)) {
                  setOrders(json.data);
+                 console.log("Proses Ambil Data Pesanan Sukses");
              } else {
-                 console.log("Gagal ambil data:", json.message);
+                 console.log("Proses Ambil Data Pesanan Gagal/Kosong");
              }
           }
         } catch (e) {
-          console.error("Error Fetching Orders:", e);
+          console.error("Error Ambil Pesanan:", e);
         } finally {
           if (isActive) setLoading(false);
         }
@@ -74,7 +69,6 @@ export default function OrdersScreen() {
                     <Text style={styles.status}>{item.status}</Text>
                 </View>
                 
-                {/* Tampilkan Nama Pemesan KHUSUS ADMIN */}
                 {isAdmin && (
                     <Text style={styles.userName}>Pemesan: {item.user_name}</Text>
                 )}
@@ -96,7 +90,7 @@ const styles = StyleSheet.create({
   row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   movieTitle: { fontSize: 16, fontWeight: 'bold', color: '#333', flex: 1 },
   status: { color: 'green', fontWeight: 'bold', textTransform: 'uppercase', fontSize: 12 },
-  userName: { fontSize: 14, color: '#007bff', fontWeight: 'bold', marginVertical: 4 }, // Warna biru untuk nama user
+  userName: { fontSize: 14, color: '#007bff', fontWeight: 'bold', marginVertical: 4 },
   total: { fontSize: 16, fontWeight: 'bold', color: '#e50914', marginTop: 5 },
   date: { fontSize: 12, color: '#888', marginTop: 5 }
 });

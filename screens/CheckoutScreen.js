@@ -46,15 +46,22 @@ export default function CheckoutScreen({ route, navigation }) {
                 total_price: total
             })
         });
+        
         const json = await res.json();
+        
         if (json.success) {
+            console.log("Proses Checkout Sukses");
             Alert.alert("Berhasil", "Tiket berhasil dibeli!", [
-                { text: "OK", onPress: () => navigation.navigate("MainTabs") }
+                { text: "OK", onPress: () => navigation.navigate("MainTabs") } // Pastikan kembali ke MainTabs
             ]);
         } else {
+            console.log("Proses Checkout Gagal:", json.message);
             Alert.alert("Gagal", json.message);
         }
-    } catch (e) { Alert.alert("Error", "Koneksi ke server gagal"); }
+    } catch (e) { 
+        console.error("Error Checkout:", e);
+        Alert.alert("Error", "Koneksi ke server gagal"); 
+    }
   };
 
   return (

@@ -25,9 +25,6 @@ export default function ProfileScreen({ navigation }) {
     <View style={{flex:1, padding:20, alignItems:'center'}}>
       <Text style={{fontSize:24, fontWeight:'bold', marginBottom:10}}>Halo, {user?.name}</Text>
       <Text style={{marginBottom:20}}>{user?.email}</Text>
-      <Text style={{marginBottom:30, fontStyle:'italic'}}>Role: {user?.role}</Text>
-
-      <Button title="LOGOUT" color="red" onPress={logout} />
 
       <View style={styles.creditBox}>
         <Text style={styles.creditTitle}>CREDIT</Text>
@@ -35,11 +32,13 @@ export default function ProfileScreen({ navigation }) {
         <Text>23081010213</Text>
         <Text>Intermediate - Mobile App</Text>
       </View>
+      
+      <Button title="LOGOUT" color="red" onPress={logout} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    creditBox: { marginTop: 50, padding: 20, borderWidth: 1, borderColor: '#ccc', width:'100%', alignItems:'center' },
+    creditBox: { marginBottom: 25, padding: 20, borderWidth: 1, borderColor: '#ccc', width:'100%', alignItems:'center' },
     creditTitle: { fontWeight:'bold', marginBottom:10, textDecorationLine:'underline' }
 });

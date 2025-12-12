@@ -24,8 +24,11 @@ export default function HomeScreen({ navigation }) {
     useCallback(() => {
       fetch(`${API_BASE}/get_movies.php`)
         .then(res => res.json())
-        .then(data => setMovies(data))
-        .catch(err => console.error(err));
+        .then(data => {
+            setMovies(data);
+            console.log("Proses Ambil Daftar Film Sukses");
+        })
+        .catch(err => console.error("Error Ambil Film:", err));
     }, [])
   );
 
@@ -59,7 +62,7 @@ export default function HomeScreen({ navigation }) {
         keyExtractor={item => String(item.id)}
         renderItem={({item}) => (
           <TouchableOpacity 
-            onPress={() => navigation.navigate("MovieDetail", { movie: item })} // <-- Klik kartu ke Detail
+            onPress={() => navigation.navigate("MovieDetail", { movie: item })}
             activeOpacity={0.8}
           >
             <View style={styles.card}>
