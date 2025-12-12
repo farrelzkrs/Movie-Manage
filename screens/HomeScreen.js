@@ -52,8 +52,6 @@ export default function HomeScreen({ navigation }) {
         {userRole === 'admin' ? (
              <Button title="Tambah Film" onPress={()=>navigation.navigate("AddMovie")} />
         ) : <View />} 
-        
-        <Button title="Profil" color="green" onPress={()=>navigation.navigate("Profile")} />
       </View>
 
       <FlatList

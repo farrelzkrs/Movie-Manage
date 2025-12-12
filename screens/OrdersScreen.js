@@ -21,22 +21,32 @@ export default function OrdersScreen() {
           
           if (!token || !user) return;
 
-          // Tentukan endpoint berdasarkan Role
           const isUserAdmin = user.role === 'admin';
           setIsAdmin(isUserAdmin);
           
           const endpoint = isUserAdmin ? 'get_all_bookings.php' : 'get_my_bookings.php';
+          const url = `${API_BASE}/${endpoint}`;
 
-          const res = await fetch(`${API_BASE}/${endpoint}`, {
+          console.log("Fetching URL:", url);
+
+          const res = await fetch(url, {
              headers: { 'Authorization': `Bearer ${token}` }
           });
 
-          const json = await res.json();
+          const textResult = await res.text(); 
+          console.log("Response Server:", textResult); // <-- LIHAT INI DI TERMINAL
+
+          const json = JSON.parse(textResult);
+          
           if (isActive) {
-             if(Array.isArray(json.data)) setOrders(json.data);
+             if(json.success && Array.isArray(json.data)) {
+                 setOrders(json.data);
+             } else {
+                 console.log("Gagal ambil data:", json.message);
+             }
           }
         } catch (e) {
-          console.error(e);
+          console.error("Error Fetching Orders:", e);
         } finally {
           if (isActive) setLoading(false);
         }

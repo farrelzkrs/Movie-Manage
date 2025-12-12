@@ -30,10 +30,10 @@ export default function ProfileScreen({ navigation }) {
       <Button title="LOGOUT" color="red" onPress={logout} />
 
       <View style={styles.creditBox}>
-        <Text style={styles.creditTitle}>CREDIT KELOMPOK</Text>
-        <Text>1. Nama Anggota 1 (NIM)</Text>
-        <Text>2. Nama Anggota 2 (NIM)</Text>
-        <Text>3. Nama Anggota 3 (NIM)</Text>
+        <Text style={styles.creditTitle}>CREDIT</Text>
+        <Text>Farrel Zikri Suryahadi</Text>
+        <Text>23081010213</Text>
+        <Text>Intermediate - Mobile App</Text>
       </View>
     </View>
   );
