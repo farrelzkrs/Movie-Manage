@@ -30,7 +30,7 @@ export default function AddMovieScreen({ navigation }) {
         let res = await fetch(`${API_BASE}/add_movie.php`, {
             method: 'POST',
             body: formData,
-            headers: { 'Content-Type': 'multipart/form-data' }
+            // headers: { 'Content-Type': 'multipart/form-data' }
         });
         let json = await res.json();
         if (json.success) {

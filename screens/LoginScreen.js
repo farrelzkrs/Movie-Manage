@@ -11,6 +11,9 @@ export default function LoginScreen({ navigation }) {
     try {
       const res = await fetch(`${API_BASE}/login.php`, {
         method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ email, password }),
       });
       const json = await res.json();

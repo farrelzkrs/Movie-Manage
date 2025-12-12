@@ -10,7 +10,9 @@ export default function RegisterScreen({ navigation }) {
   const handleRegister = async () => {
     try {
       const res = await fetch(`${API_BASE}/register.php`, {
-        method: "POST",
+        method: "POST",headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ name, email, password }),
       });
       const json = await res.json();
