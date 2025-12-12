@@ -21,7 +21,7 @@ export default function LoginScreen({ navigation }) {
       if (json.success) {
         await AsyncStorage.setItem("userToken", json.data.token);
         await AsyncStorage.setItem("user", JSON.stringify(json.data));
-        navigation.reset({ index: 0, routes: [{ name: "Home" }] });
+        navigation.reset({ index: 0, routes: [{ name: "MainTabs" }] });
       } else {
         Alert.alert("Gagal", json.message);
       }

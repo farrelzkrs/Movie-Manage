@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, TextInput, Button, Text, Image } from "react-native";
+import { View, TextInput, Button, Text, Image, Alert } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { API_BASE } from "../config/api";
 
@@ -15,31 +15,54 @@ export default function AddMovieScreen({ navigation }) {
   };
 
   const submit = async () => {
+    // 1. Validasi Input
+    if (!title || !desc || !price) {
+        Alert.alert("Gagal", "Mohon isi semua data");
+        return;
+    }
+
     let formData = new FormData();
     formData.append('title', title);
     formData.append('description', desc);
     formData.append('ticket_price', price);
+
     if (image) {
         let filename = image.split('/').pop();
         let match = /\.(\w+)$/.exec(filename);
-        let type = match ? `image/${match[1]}` : `image`;
+        let type = match ? `image/${match[1]}` : `image/jpeg`; // Default fallback
         formData.append('poster', { uri: image, name: filename, type });
     }
 
     try {
+        console.log("Mengirim data ke:", `${API_BASE}/add_movie.php`);
+        
         let res = await fetch(`${API_BASE}/add_movie.php`, {
             method: 'POST',
             body: formData,
-            // headers: { 'Content-Type': 'multipart/form-data' }
+            // Headers Content-Type JANGAN ditulis manual saat upload file
         });
-        let json = await res.json();
-        if (json.success) {
-            alert("Berhasil!");
-            navigation.goBack();
-        } else {
-            alert("Gagal: " + json.message);
+
+        // 2. Cek apakah respon bukan JSON (misal HTML error dari PHP)
+        const textResponse = await res.text();
+        console.log("Respon Server:", textResponse); // Cek log di terminal
+
+        try {
+            let json = JSON.parse(textResponse);
+            if (json.success) {
+                Alert.alert("Berhasil!", json.message, [
+                    { text: "OK", onPress: () => navigation.goBack() }
+                ]);
+            } else {
+                Alert.alert("Gagal", json.message);
+            }
+        } catch (e) {
+            Alert.alert("Error Server", "Respon server tidak valid (bukan JSON). Cek log console.");
         }
-    } catch (err) { alert("Error koneksi"); }
+
+    } catch (err) { 
+        console.error(err);
+        Alert.alert("Error Koneksi", "Pastikan IP Laptop benar dan XAMPP sudah jalan."); 
+    }
   };
 
   return (

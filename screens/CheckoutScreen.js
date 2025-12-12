@@ -49,7 +49,7 @@ export default function CheckoutScreen({ route, navigation }) {
         const json = await res.json();
         if (json.success) {
             Alert.alert("Berhasil", "Tiket berhasil dibeli!", [
-                { text: "OK", onPress: () => navigation.navigate("Home") }
+                { text: "OK", onPress: () => navigation.navigate("MainTabs") }
             ]);
         } else {
             Alert.alert("Gagal", json.message);
