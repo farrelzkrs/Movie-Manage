@@ -1,153 +1,145 @@
-import React, { useEffect, useState } from 'react'
-import { View, Text, ActivityIndicator } from 'react-native'
-import { NavigationContainer } from '@react-navigation/native'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { Ionicons } from '@expo/vector-icons'
-
+import React, { useEffect, useState } from "react";
+import { View, Text, ActivityIndicator } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 
 // Import Screens
-import LoginScreen from './screens/LoginScreen'
-import RegisterScreen from './screens/RegisterScreen'
-import HomeScreen from './screens/HomeScreen'
-import AddMovieScreen from './screens/AddMovieScreen'
-import EditMovieScreen from './screens/EditMovieScreen'
-import ProfileScreen from './screens/ProfileScreen'
-import MovieDetailScreen from './screens/MovieDetailScreen'
-import CheckoutScreen from './screens/CheckoutScreen'
-import OrdersScreen from './screens/OrdersScreen'
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
+import HomeScreen from "./screens/HomeScreen";
+import AddMovieScreen from "./screens/AddMovieScreen";
+import EditMovieScreen from "./screens/EditMovieScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import MovieDetailScreen from "./screens/MovieDetailScreen";
+import CheckoutScreen from "./screens/CheckoutScreen";
+import OrdersScreen from "./screens/OrdersScreen";
 
-
-const Stack = createNativeStackNavigator()
-const Tab = createBottomTabNavigator()
-
+const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 // --- Komponen Tab Navigator (Menu Bawah) ---
-function MainTabs () {
+function MainTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: true,
         tabBarIcon: ({ focused, color, size }) => {
-let iconName
+          let iconName;
 
-
-          if (route.name === 'Home') {
-            iconName = focused ? 'home' : 'home-outline'
-          } else if (route.name === 'Orders') {
-            iconName = focused ? 'receipt' : 'receipt-outline'
-          } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline'
+          if (route.name === "Home") {
+            iconName = focused ? "home" : "home-outline";
+          } else if (route.name === "Orders") {
+            iconName = focused ? "receipt" : "receipt-outline";
+          } else if (route.name === "Profile") {
+            iconName = focused ? "person" : "person-outline";
           }
 
-return <Ionicons name={iconName} size={size} color={color} />
-
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: '#e50914', // Warna merah khas bioskop
-        tabBarInactiveTintColor: 'gray'
+        tabBarActiveTintColor: "#e50914", // Warna merah khas bioskop
+        tabBarInactiveTintColor: "gray",
       })}
     >
       <Tab.Screen
-        name='Home'
+        name="Home"
         component={HomeScreen}
-        options={{ title: 'Daftar Film' }}
+        options={{ title: "Daftar Film" }}
       />
       <Tab.Screen
-        name='Orders'
+        name="Orders"
         component={OrdersScreen}
-        options={{ title: 'Riwayat Pesanan' }}
+        options={{ title: "Riwayat Pesanan" }}
       />
       <Tab.Screen
-        name='Profile'
+        name="Profile"
         component={ProfileScreen}
-        options={{ title: 'Profil Saya' }}
+        options={{ title: "Profil Saya" }}
       />
     </Tab.Navigator>
-  )
+  );
 }
 
 // --- Komponen Splash Screen ---
-function SplashScreen () {
+function SplashScreen() {
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#1a1a1a'
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#1a1a1a",
       }}
     >
-      <Text style={{ fontSize: 30, fontWeight: 'bold', color: '#e50914' }}>
+      <Text style={{ fontSize: 30, fontWeight: "bold", color: "#e50914" }}>
         CINEMA APP
       </Text>
-      <ActivityIndicator size='large' color='#fff' style={{ marginTop: 20 }} />
-      <Text style={{ color: '#fff', marginTop: 10 }}>Loading...</Text>
+      <ActivityIndicator size="large" color="#fff" style={{ marginTop: 20 }} />
+      <Text style={{ color: "#fff", marginTop: 10 }}>Loading...</Text>
     </View>
-  )
+  );
 }
 
 // --- App Utama ---
-export default function App () {
-  const [isShowSplash, setIsShowSplash] = useState(true)
-  const [initialRoute, setInitialRoute] = useState('Login')
+export default function App() {
+  const [isShowSplash, setIsShowSplash] = useState(true);
+  const [initialRoute, setInitialRoute] = useState("Login");
 
   useEffect(() => {
     setTimeout(async () => {
-      const token = await AsyncStorage.getItem('userToken')
-      setInitialRoute(token ? 'MainTabs' : 'Login') // Jika login, masuk ke Tabs
-      setIsShowSplash(false)
-    }, 2000)
-  }, [])
+      const token = await AsyncStorage.getItem("userToken");
+      setInitialRoute(token ? "MainTabs" : "Login"); // Jika login, masuk ke Tabs
+      setIsShowSplash(false);
+    }, 2000);
+  }, []);
 
-if (isShowSplash) return <SplashScreen />
-
+  if (isShowSplash) return <SplashScreen />;
 
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute}>
         {/* Auth Screens */}
         <Stack.Screen
-          name='Login'
+          name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name='Register'
+          name="Register"
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-
         {/* Main App (Tab Navigator) */}
-;<Stack.Screen
-  name='MainTabs'
-  component={MainTabs}
-  options={{ headerShown: false }}
-/>
-
-
+        ;
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabs}
+          options={{ headerShown: false }}
+        />
         {/* Detail & CRUD Screens (Masuk Stack agar menutupi Tab Bar) */}
         <Stack.Screen
-          name='MovieDetail'
+          name="MovieDetail"
           component={MovieDetailScreen}
-          options={{ title: 'Detail Film' }}
+          options={{ title: "Detail Film" }}
         />
         <Stack.Screen
-          name='Checkout'
+          name="Checkout"
           component={CheckoutScreen}
-          options={{ title: 'Pembayaran' }}
+          options={{ title: "Pembayaran" }}
         />
         <Stack.Screen
-          name='AddMovie'
+          name="AddMovie"
           component={AddMovieScreen}
-          options={{ title: 'Tambah Film' }}
+          options={{ title: "Tambah Film" }}
         />
         <Stack.Screen
-          name='EditMovie'
+          name="EditMovie"
           component={EditMovieScreen}
-          options={{ title: 'Edit Film' }}
+          options={{ title: "Edit Film" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
-  )
+  );
 }
