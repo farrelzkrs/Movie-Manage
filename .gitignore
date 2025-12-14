@@ -1,5 +1,8 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
+# Db connect
+cinema-api/db.php
+
 # dependencies
 .vscode/
 node_modules/
