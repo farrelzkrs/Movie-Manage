@@ -7,7 +7,6 @@ import {
   Image,
   Alert,
   ScrollView,
-  Platform,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { API_BASE, IMAGE_URL } from "../config/api";
@@ -22,18 +21,14 @@ export default function EditMovieScreen({ route, navigation }) {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.5, // Mengurangi kualitas agar ukuran file tidak terlalu besar
-      allowsEditing: true,
+      quality: 0.5,
     });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
+    if (!result.canceled) setImage(result.assets[0].uri);
   };
 
   const update = async () => {
     if (!title || !desc || !price) {
-      Alert.alert("Error", "Mohon isi semua field teks.");
+      Alert.alert("Gagal", "Mohon isi semua data");
       return;
     }
 
@@ -43,65 +38,33 @@ export default function EditMovieScreen({ route, navigation }) {
     formData.append("description", desc);
     formData.append("ticket_price", price);
 
-    // Logika Upload Gambar yang diperbaiki
     if (image) {
-      let uriParts = image.split(".");
-      let fileType = uriParts[uriParts.length - 1];
-      let fileName = image.split("/").pop();
-
-      formData.append("poster", {
-        uri: Platform.OS === "android" ? image : image.replace("file://", ""),
-        name: fileName,
-        type: `image/${fileType === "jpg" ? "jpeg" : fileType}`, // Memastikan tipe MIME valid
-      });
+      let filename = image.split("/").pop();
+      let match = /\.(\w+)$/.exec(filename);
+      let type = match ? `image/${match[1]}` : `image/jpeg`;
+      formData.append("poster", { uri: image, name: filename, type });
     }
 
     try {
-      console.log("Mengirim data ke:", `${API_BASE}/update_movie.php`);
-
       let res = await fetch(`${API_BASE}/update_movie.php`, {
         method: "POST",
         body: formData,
-        headers: {
-          // JANGAN SET Content-Type secara manual untuk FormData, biarkan browser/device yang mengaturnya
-          Accept: "application/json",
-        },
       });
 
-      // DEBUGGING: Ambil text dulu sebelum parse JSON
-      const textResponse = await res.text();
-      console.log("Respon Server Raw:", textResponse);
-
-      let json;
-      try {
-        json = JSON.parse(textResponse);
-      } catch (e) {
-        Alert.alert(
-          "Error Server",
-          "Server mengembalikan data yang bukan JSON. Cek console log."
-        );
-        console.error("Gagal parse JSON:", e);
-        return;
-      }
+      let json = await res.json();
 
       if (json.success) {
-        console.log("Proses Update Sukses");
-        Alert.alert("Berhasil!", "Data film berhasil diperbarui", [
+        console.log("Proses Update Film Sukses");
+        Alert.alert("Berhasil!", json.message || "Data film diperbarui", [
           { text: "OK", onPress: () => navigation.goBack() },
         ]);
       } else {
-        console.log("Server merespon gagal:", json.message);
-        Alert.alert(
-          "Gagal Update",
-          json.message || "Terjadi kesalahan di server"
-        );
+        console.log("Proses Update Film Gagal:", json.message);
+        Alert.alert("Gagal", json.message);
       }
     } catch (err) {
-      console.error("Error Koneksi/Fetch:", err);
-      Alert.alert(
-        "Error Koneksi",
-        "Gagal menghubungi server. Pastikan IP Address benar dan server berjalan."
-      );
+      console.error("Error Update Film:", err);
+      Alert.alert("Error Koneksi", "Gagal menghubungi server.");
     }
   };
 
@@ -110,16 +73,12 @@ export default function EditMovieScreen({ route, navigation }) {
       <Text style={{ marginBottom: 10, fontWeight: "bold", color: "gray" }}>
         Edit ID: {movie.id}
       </Text>
-
-      <Text style={{ marginTop: 10 }}>Judul Film:</Text>
       <TextInput
         placeholder="Judul Film"
         value={title}
         onChangeText={setTitle}
         style={{ borderBottomWidth: 1, marginBottom: 15, padding: 5 }}
       />
-
-      <Text>Deskripsi:</Text>
       <TextInput
         placeholder="Deskripsi"
         value={desc}
@@ -127,8 +86,6 @@ export default function EditMovieScreen({ route, navigation }) {
         style={{ borderBottomWidth: 1, marginBottom: 15, padding: 5 }}
         multiline
       />
-
-      <Text>Harga Tiket:</Text>
       <TextInput
         placeholder="Harga Tiket"
         value={price}
@@ -138,33 +95,31 @@ export default function EditMovieScreen({ route, navigation }) {
       />
 
       <Button
-        title={image ? "Ganti Poster (Terpilih)" : "Ganti Poster (Opsional)"}
+        title="Ganti Poster (Opsional)"
         onPress={pickImage}
-        color={image ? "green" : "gray"}
+        color="gray"
       />
 
-      {/* Preview Gambar: Tampilkan gambar baru jika ada, jika tidak tampilkan poster lama */}
       <Image
         source={{
           uri: image
             ? image
             : movie.poster
               ? `${IMAGE_URL}${movie.poster}`
-              : "https://placehold.co/100", // Fallback image
+              : "https://placehold.co/100",
         }}
         style={{
-          width: 120,
-          height: 180,
+          width: 100,
+          height: 150,
           alignSelf: "center",
-          marginVertical: 15,
+          marginVertical: 10,
           backgroundColor: "#eee",
-          borderRadius: 8,
           resizeMode: "cover",
         }}
       />
 
-      <View style={{ marginTop: 10, marginBottom: 40 }}>
-        <Button title="Simpan Perubahan" onPress={update} color="orange" />
+      <View style={{ marginTop: 20, marginBottom: 40 }}>
+        <Button title="Update Film" onPress={update} color="orange" />
       </View>
     </ScrollView>
   );

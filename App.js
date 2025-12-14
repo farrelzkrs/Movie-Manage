@@ -20,7 +20,6 @@ import OrdersScreen from "./screens/OrdersScreen";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-// --- Komponen Tab Navigator (Menu Bawah) ---
 function MainTabs() {
   return (
     <Tab.Navigator
@@ -39,7 +38,7 @@ function MainTabs() {
 
           return <Ionicons name={iconName} size={size} color={color} />;
         },
-        tabBarActiveTintColor: "#e50914", // Warna merah khas bioskop
+        tabBarActiveTintColor: "#e50914",
         tabBarInactiveTintColor: "gray",
       })}
     >
@@ -62,7 +61,6 @@ function MainTabs() {
   );
 }
 
-// --- Komponen Splash Screen ---
 function SplashScreen() {
   return (
     <View
@@ -70,7 +68,7 @@ function SplashScreen() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#1a1a1a",
+        backgroundColor: "#888888",
       }}
     >
       <Text style={{ fontSize: 30, fontWeight: "bold", color: "#e50914" }}>
@@ -82,7 +80,6 @@ function SplashScreen() {
   );
 }
 
-// --- App Utama ---
 export default function App() {
   const [isShowSplash, setIsShowSplash] = useState(true);
   const [initialRoute, setInitialRoute] = useState("Login");
@@ -90,9 +87,9 @@ export default function App() {
   useEffect(() => {
     setTimeout(async () => {
       const token = await AsyncStorage.getItem("userToken");
-      setInitialRoute(token ? "MainTabs" : "Login"); // Jika login, masuk ke Tabs
+      setInitialRoute(token ? "MainTabs" : "Login");
       setIsShowSplash(false);
-    }, 2000);
+    }, 3000);
   }, []);
 
   if (isShowSplash) return <SplashScreen />;
@@ -100,7 +97,6 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName={initialRoute}>
-        {/* Auth Screens */}
         <Stack.Screen
           name="Login"
           component={LoginScreen}
@@ -111,14 +107,12 @@ export default function App() {
           component={RegisterScreen}
           options={{ headerShown: false }}
         />
-        {/* Main App (Tab Navigator) */}
-        ;
+
         <Stack.Screen
           name="MainTabs"
           component={MainTabs}
           options={{ headerShown: false }}
         />
-        {/* Detail & CRUD Screens (Masuk Stack agar menutupi Tab Bar) */}
         <Stack.Screen
           name="MovieDetail"
           component={MovieDetailScreen}

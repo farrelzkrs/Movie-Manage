@@ -11,12 +11,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_BASE } from "../config/api";
 
 export default function CheckoutScreen({ route, navigation }) {
-  // Ambil parameter movie dari navigasi sebelumnya (MovieDetail)
   const { movie } = route.params || {};
   const [qty, setQty] = useState("1");
   const [total, setTotal] = useState(0);
-
-  // Jika halaman dibuka tanpa data movie (error handling)
   if (!movie) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -62,7 +59,7 @@ export default function CheckoutScreen({ route, navigation }) {
       if (json.success) {
         console.log("Proses Checkout Sukses");
         Alert.alert("Berhasil", "Tiket berhasil dibeli!", [
-          { text: "OK", onPress: () => navigation.navigate("MainTabs") }, // Pastikan kembali ke MainTabs
+          { text: "OK", onPress: () => navigation.navigate("MainTabs") },
         ]);
       } else {
         console.log("Proses Checkout Gagal:", json.message);

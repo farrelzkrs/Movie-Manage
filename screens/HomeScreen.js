@@ -10,14 +10,13 @@ import {
   StyleSheet,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // Import AsyncStorage
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_BASE, IMAGE_URL } from "../config/api";
 
 export default function HomeScreen({ navigation }) {
   const [movies, setMovies] = useState([]);
-  const [userRole, setUserRole] = useState(null); // State untuk simpan role
+  const [userRole, setUserRole] = useState(null);
 
-  // Cek role user saat layar dimuat
   useEffect(() => {
     const checkRole = async () => {
       const jsonValue = await AsyncStorage.getItem("user");
@@ -107,8 +106,6 @@ export default function HomeScreen({ navigation }) {
                 <Text style={{ color: "green", marginBottom: 5 }}>
                   Rp {Number(item.ticket_price).toLocaleString()}
                 </Text>
-
-                {/* Tombol Edit/Hapus hanya untuk Admin */}
                 {userRole === "admin" && (
                   <View style={{ flexDirection: "row", marginTop: 5 }}>
                     <TouchableOpacity

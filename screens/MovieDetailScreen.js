@@ -23,7 +23,7 @@ export default function MovieDetailScreen({ route, navigation }) {
         style={{ width: "100%", height: 400, resizeMode: "cover" }}
       />
       <View style={{ padding: 20 }}>
-        <Text style={styles.title}>{movie.title}</Text>;
+        <Text style={styles.title}>{movie.title}</Text>
         <Text style={styles.price}>
           Rp {Number(movie.ticket_price).toLocaleString()}
         </Text>

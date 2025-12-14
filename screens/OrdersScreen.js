@@ -33,7 +33,6 @@ export default function OrdersScreen() {
             ? "get_all_bookings.php"
             : "get_my_bookings.php";
 
-          // HAPUS log URL dan Text Response
           const res = await fetch(`${API_BASE}/${endpoint}`, {
             headers: { Authorization: `Bearer ${token}` },
           });

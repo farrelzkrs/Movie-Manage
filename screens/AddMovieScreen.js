@@ -44,16 +44,10 @@ export default function AddMovieScreen({ navigation }) {
     }
 
     try {
-      // HAPUS log detail, ganti dengan log proses
-      // console.log("Mengirim ke:", ...);
-
       let res = await fetch(`${API_BASE}/add_movie.php`, {
         method: "POST",
         body: formData,
-        // headers: { 'Content-Type': 'multipart/form-data' } // Biarkan otomatis
       });
-
-      // Langsung parse JSON tanpa log text mentah
 
       let json = await res.json();
 
