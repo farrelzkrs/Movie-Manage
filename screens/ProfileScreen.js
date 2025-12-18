@@ -34,7 +34,7 @@ export default function ProfileScreen({ navigation }) {
         <Text>23081010213</Text>
         <Text>Intermediate - Mobile App</Text>
       </View>
-      ;<Button title="LOGOUT" color="red" onPress={logout} />
+      <Button title="LOGOUT" color="red" onPress={logout} />
     </View>
   );
 }
