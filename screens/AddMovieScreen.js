@@ -88,7 +88,7 @@ export default function AddMovieScreen({ navigation }) {
         keyboardType="numeric"
         style={{ borderBottomWidth: 1, marginBottom: 15, padding: 5 }}
       />
-      ;<Button title="Pilih Poster" onPress={pickImage} />
+      <Button title="Pilih Poster" onPress={pickImage} />
       {image && (
         <Image
           source={{ uri: image }}
