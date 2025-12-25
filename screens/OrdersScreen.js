@@ -5,12 +5,15 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity, // [1] Import TouchableOpacity
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "@react-navigation/native";
 import { API_BASE } from "../config/api";
 
-export default function OrdersScreen() {
+// [2] Tambahkan prop 'navigation' disini
+export default function OrdersScreen({ navigation }) {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -18,7 +21,6 @@ export default function OrdersScreen() {
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
-
       const fetchOrders = async () => {
         try {
           const token = await AsyncStorage.getItem("userToken");
@@ -38,13 +40,9 @@ export default function OrdersScreen() {
           });
 
           const json = await res.json();
-
           if (isActive) {
             if (json.success && Array.isArray(json.data)) {
               setOrders(json.data);
-              console.log("Proses Ambil Data Pesanan Sukses");
-            } else {
-              console.log("Proses Ambil Data Pesanan Gagal/Kosong");
             }
           }
         } catch (e) {
@@ -60,6 +58,15 @@ export default function OrdersScreen() {
       };
     }, [])
   );
+
+  // Fungsi navigasi ke PaymentScreen
+  const handlePressOrder = (item) => {
+    if (item.status === "pending") {
+      navigation.navigate("Payment", { order: item });
+    } else {
+      Alert.alert("Info", "Pesanan ini sudah lunas.");
+    }
+  };
 
   if (loading)
     return (
@@ -79,12 +86,23 @@ export default function OrdersScreen() {
           data={orders}
           keyExtractor={(item) => String(item.id)}
           renderItem={({ item }) => (
-            <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.card}
+              onPress={() => handlePressOrder(item)}
+              activeOpacity={0.7}
+            >
               <View style={styles.row}>
                 <Text style={styles.movieTitle}>
                   {item.movie_title || "Judul Film"}
                 </Text>
-                <Text style={styles.status}>{item.status}</Text>
+                <Text
+                  style={[
+                    styles.status,
+                    { color: item.status === "pending" ? "orange" : "green" },
+                  ]}
+                >
+                  {item.status}
+                </Text>
               </View>
 
               {isAdmin && (
@@ -96,7 +114,11 @@ export default function OrdersScreen() {
                 Total: Rp {Number(item.total_price).toLocaleString()}
               </Text>
               <Text style={styles.date}>{item.created_at}</Text>
-            </View>
+
+              {item.status === "pending" && !isAdmin && (
+                <Text style={styles.clickToPay}>Klik untuk Bayar</Text>
+              )}
+            </TouchableOpacity>
           )}
         />
       )}
@@ -120,7 +142,6 @@ const styles = StyleSheet.create({
   },
   movieTitle: { fontSize: 16, fontWeight: "bold", color: "#333", flex: 1 },
   status: {
-    color: "green",
     fontWeight: "bold",
     textTransform: "uppercase",
     fontSize: 12,
@@ -133,4 +154,11 @@ const styles = StyleSheet.create({
   },
   total: { fontSize: 16, fontWeight: "bold", color: "#e50914", marginTop: 5 },
   date: { fontSize: 12, color: "#888", marginTop: 5 },
+  clickToPay: {
+    marginTop: 10,
+    color: "#e50914",
+    fontWeight: "bold",
+    textAlign: "right",
+    fontSize: 12,
+  },
 });

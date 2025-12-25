@@ -2,6 +2,7 @@
 require 'db.php';
 require 'helpers.php';
 
+// 1. Validasi Token
 $headers = getallheaders();
 $auth = $headers['Authorization'] ?? '';
 if (!$auth && isset($_SERVER['HTTP_AUTHORIZATION'])) {
@@ -13,6 +14,7 @@ if (!preg_match('/Bearer\s(\S+)/', $auth, $matches)) {
 }
 $token = $matches[1];
 
+// 2. Cek User dari Token
 $stmt = $pdo->prepare("SELECT id FROM users WHERE token = ?");
 $stmt->execute([$token]);
 $user = $stmt->fetch();
@@ -21,6 +23,7 @@ if (!$user) {
     jsonResponse(["success" => false, "message" => "Invalid Token"], 401);
 }
 
+// 3. Ambil Data Booking User
 $sql = "SELECT b.*, m.title as movie_title 
         FROM bookings b 
         JOIN movies m ON b.movie_id = m.id 

@@ -9,6 +9,7 @@ $password = $input['password'] ?? '';
 
 if (!$name || !$email || !$password) jsonResponse(["success" => false, "message" => "Data tidak lengkap"], 400);
 
+// Cek email duplikat
 $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
 $stmt->execute([$email]);
 if ($stmt->fetch()) jsonResponse(["success" => false, "message" => "Email sudah terdaftar"], 400);

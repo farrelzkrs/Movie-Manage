@@ -2,6 +2,7 @@
 require 'db.php';
 require 'helpers.php';
 
+// 1. Validasi Token
 $headers = getallheaders();
 $auth = $headers['Authorization'] ?? '';
 if (!$auth && isset($_SERVER['HTTP_AUTHORIZATION'])) {
@@ -13,6 +14,7 @@ if (!preg_match('/Bearer\s(\S+)/', $auth, $matches)) {
 }
 $token = $matches[1];
 
+// 2. Cek Apakah Admin
 $stmt = $pdo->prepare("SELECT id, role FROM users WHERE token = ?");
 $stmt->execute([$token]);
 $user = $stmt->fetch();
@@ -21,6 +23,7 @@ if (!$user || $user['role'] !== 'admin') {
     jsonResponse(["success" => false, "message" => "Forbidden"], 403);
 }
 
+// 3. Ambil SEMUA Data Booking + Nama User
 $sql = "SELECT b.*, m.title as movie_title, u.name as user_name 
         FROM bookings b 
         JOIN movies m ON b.movie_id = m.id 

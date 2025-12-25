@@ -2,13 +2,16 @@
 require 'db.php';
 require 'helpers.php';
 
+// 1. Ambil Server 
 $auth = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
 
+// 2. Ambil Header Apache Jika Kosong
 if (!$auth && function_exists('getallheaders')) {
     $headers = getallheaders();
     $auth = $headers['Authorization'] ?? '';
 }
 
+// 3. Validasi Format Bearer
 if (!preg_match('/Bearer\s(\S+)/', $auth, $matches)) {
     jsonResponse(["success" => false, "message" => "Unauthorized: Token tidak terbaca"], 401);
 }
@@ -22,6 +25,7 @@ if (!$user) {
     jsonResponse(["success" => false, "message" => "Invalid Token: User tidak ditemukan"], 401);
 }
 
+// Proses Booking
 $input = json_decode(file_get_contents('php://input'), true);
 $movie_id = $input['movie_id'] ?? 0;
 $qty = intval($input['qty'] ?? 1);

@@ -10,6 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $desc  = $_POST['description'] ?? '';
     $price = intval($_POST['ticket_price'] ?? 0);
 
+    // Logic update gambar jika ada upload baru
     $sql = "UPDATE movies SET title=?, description=?, ticket_price=? WHERE id=?";
     $params = [$title, $desc, $price, $id];
 

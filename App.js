@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, ActivityIndicator } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native"; //
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,6 +16,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import MovieDetailScreen from "./screens/MovieDetailScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import OrdersScreen from "./screens/OrdersScreen";
+import PaymentScreen from "./screens/PaymentScreen"; // Import Screen Pembayaran Baru
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -132,6 +133,13 @@ export default function App() {
           name="EditMovie"
           component={EditMovieScreen}
           options={{ title: "Edit Film" }}
+        />
+
+        {/* Screen Pembayaran Baru */}
+        <Stack.Screen
+          name="Payment"
+          component={PaymentScreen}
+          options={{ title: "Pembayaran" }}
         />
       </Stack.Navigator>
     </NavigationContainer>
